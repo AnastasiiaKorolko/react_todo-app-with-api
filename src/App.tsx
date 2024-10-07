@@ -33,6 +33,7 @@ export const App: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [deletedIds, setDeletedIds] = useState<number[]>([]);
   const [updatingIds, setUpdatingIds] = useState<number[]>([]);
+  const [editTitleIds, setEditTitleIds] = useState<number[]>([]);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -95,7 +96,7 @@ export const App: React.FC = () => {
   };
 
   const handleUpdateTodo = async (data: Todo) => {
-    setLoading(true);
+    setEditTitleIds(prevIds => [...prevIds, data.id])
     try {
       await updateTodo(data.id, { title: data.title });
       const fetchedTodos = await getTodos();
@@ -104,12 +105,11 @@ export const App: React.FC = () => {
     } catch (e) {
       setError('Unable to update a todo');
     } finally {
-      setLoading(false);
+      setEditTitleIds(prevIds => prevIds.filter((id => id !== data.id)));
     }
   };
 
   const handleDeleteTodo = async (todoId: number) => {
-    // setLoading(true);
     setDeletedIds(prevIds => [...prevIds, todoId]);
     try {
       await deleteTodo(todoId);
@@ -118,7 +118,6 @@ export const App: React.FC = () => {
       setError('Unable to delete a todo');
       setTimeout(() => setError(null), 3000);
     } finally {
-      setLoading(false);
       setDeletedIds(prevIds => prevIds.filter(id => id !== todoId));
     }
   };
@@ -261,6 +260,7 @@ export const App: React.FC = () => {
           isSubmitting={isSubmitting}
           deletedIds={deletedIds}
           updatingIds={updatingIds}
+          editTitleIds={editTitleIds}
         />
 
         {todos.length > 0 && (

@@ -12,6 +12,7 @@ interface TodoListProps {
   isSubmitting: boolean;
   deletedIds: number[];
   updatingIds: number[];
+  editTitleIds: number[];
 }
 
 export const TodoList: React.FC<TodoListProps> = ({
@@ -23,6 +24,7 @@ export const TodoList: React.FC<TodoListProps> = ({
   isSubmitting,
   deletedIds,
   updatingIds,
+  editTitleIds,
 }) => {
   return (
     <section className="todoapp__main" data-cy="TodoList">
@@ -36,7 +38,7 @@ export const TodoList: React.FC<TodoListProps> = ({
           onUpdate={() => onUpdateTodo(todo)}
           onUpdateTitle={onUpdateTitleTodo}
           loading={
-            updatingIds.includes(todo.id) || deletedIds.includes(todo.id)
+            updatingIds.includes(todo.id) || deletedIds.includes(todo.id) || editTitleIds.includes(todo.id)
           }
         />
       ))}

@@ -23,6 +23,7 @@ export const TodoItem: React.FC<TodoItemProps> = ({
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState(todo.title);
 
+
   const handleEdit = () => {
     setIsEditing(true);
     setTitle(todo.title);
@@ -38,7 +39,9 @@ export const TodoItem: React.FC<TodoItemProps> = ({
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
+
       handleSave();
+
     }
 
     if (event.key === 'Escape') {
