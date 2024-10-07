@@ -22,26 +22,45 @@ export const TodoItem: React.FC<TodoItemProps> = ({
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState(todo.title);
-
+  const [error, setError] = useState<string | null>(null);
 
   const handleEdit = () => {
     setIsEditing(true);
     setTitle(todo.title);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const newData = { ...todo };
 
-    newData.title = title;
-    onUpdateTitle(newData);
-    setIsEditing(false);
+    newData.title = title.trim();
+
+    if (!newData.title) {
+      if (onDelete) {
+        try {
+          await onDelete(todo.id);
+
+          return;
+        } catch (e) {
+          setError('Unable to delete todo');
+
+          return;
+        }
+      }
+    }
+
+    if (onUpdateTitle) {
+      try {
+        await onUpdateTitle(newData);
+        setIsEditing(false);
+      } catch (e) {
+        setError('Unable to update title');
+      }
+    }
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-
       handleSave();
-
     }
 
     if (event.key === 'Escape') {
@@ -64,17 +83,20 @@ export const TodoItem: React.FC<TodoItemProps> = ({
       </label>
 
       {isEditing ? (
-        <input
-          data-cy="TodoTitleField"
-          type="text"
-          className="todo__title-field"
-          value={title}
-          onChange={event => setTitle(event.target.value)}
-          onBlur={handleSave}
-          onKeyDown={handleKeyDown}
-          autoFocus
-          disabled={loading}
-        />
+        <>
+          <input
+            data-cy="TodoTitleField"
+            type="text"
+            className="todo__title-field"
+            value={title}
+            onChange={event => setTitle(event.target.value)}
+            onBlur={handleSave}
+            onKeyDown={handleKeyDown}
+            autoFocus
+            disabled={loading}
+          />
+          {error && <div className="error-message">{error}</div>}
+        </>
       ) : (
         <span
           data-cy="TodoTitle"

@@ -38,7 +38,9 @@ export const TodoList: React.FC<TodoListProps> = ({
           onUpdate={() => onUpdateTodo(todo)}
           onUpdateTitle={onUpdateTitleTodo}
           loading={
-            updatingIds.includes(todo.id) || deletedIds.includes(todo.id) || editTitleIds.includes(todo.id)
+            updatingIds.includes(todo.id) ||
+            deletedIds.includes(todo.id) ||
+            editTitleIds.includes(todo.id)
           }
         />
       ))}

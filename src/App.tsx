@@ -96,16 +96,19 @@ export const App: React.FC = () => {
   };
 
   const handleUpdateTodo = async (data: Todo) => {
-    setEditTitleIds(prevIds => [...prevIds, data.id])
+    setEditTitleIds(prevIds => [...prevIds, data.id]);
     try {
       await updateTodo(data.id, { title: data.title });
-      const fetchedTodos = await getTodos();
 
-      setTodos(fetchedTodos);
+      setTodos(prevTodos =>
+        prevTodos.map(todo =>
+          todo.id == data.id ? { ...todo, title: data.title } : todo,
+        ),
+      );
     } catch (e) {
       setError('Unable to update a todo');
     } finally {
-      setEditTitleIds(prevIds => prevIds.filter((id => id !== data.id)));
+      setEditTitleIds(prevIds => prevIds.filter(id => id !== data.id));
     }
   };
 
