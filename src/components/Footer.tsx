@@ -1,5 +1,6 @@
 import { Todo } from '../types/Todo';
 import { TodoStatus } from '../App';
+import classNames from 'classnames';
 
 interface FooterProps {
   filter: TodoStatus;
@@ -14,6 +15,7 @@ export const Footer: React.FC<FooterProps> = ({
   todos,
   onClick,
 }) => {
+  const todoStatuses = Object.values(TodoStatus);
   const activeTodo = todos.filter(todo => !todo.completed).length;
   const completedTodos = todos.filter(todo => todo.completed).length;
 
@@ -25,38 +27,17 @@ export const Footer: React.FC<FooterProps> = ({
 
       {/* Active link should have the 'selected' class */}
       <nav className="filter" data-cy="Filter">
-        <a
-          href="#/"
-          className={`filter__link ${
-            filter === TodoStatus.ALL ? 'selected' : ''
-          }`}
-          data-cy="FilterLinkAll"
-          onClick={() => setFilter(TodoStatus.ALL)}
+        {todoStatuses.map((status) => (
+          <a
+          key={status}
+          href={`#/${status.toLowerCase()}`}
+          className={classNames('filter__link', { selected: filter === status, })}
+          data-cy={`FilterLink${status}`}
+          onClick={() => setFilter(status)}
         >
-          All
+          {status}
         </a>
-
-        <a
-          href="#/active"
-          className={`filter__link ${
-            filter === TodoStatus.ACTIVE ? 'selected' : ''
-          }`}
-          data-cy="FilterLinkActive"
-          onClick={() => setFilter(TodoStatus.ACTIVE)}
-        >
-          Active
-        </a>
-
-        <a
-          href="#/completed"
-          className={`filter__link ${
-            filter === TodoStatus.COMPLETED ? 'selected' : ''
-          }`}
-          data-cy="FilterLinkCompleted"
-          onClick={() => setFilter(TodoStatus.COMPLETED)}
-        >
-          Completed
-        </a>
+        ))}
       </nav>
 
       {/* this button should be disabled if there are no completed todos */}

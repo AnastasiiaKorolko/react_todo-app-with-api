@@ -20,13 +20,14 @@ export const TodoItem: React.FC<TodoItemProps> = ({
   onUpdate,
   onUpdateTitle,
 }) => {
+  const { id, title: todoTitle, completed } = todo;
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState(todo.title);
   const [error, setError] = useState<string | null>(null);
 
   const handleEdit = () => {
     setIsEditing(true);
-    setTitle(todo.title);
+    setTitle(todoTitle);
   };
 
   const handleSave = async () => {
@@ -37,7 +38,7 @@ export const TodoItem: React.FC<TodoItemProps> = ({
     if (!newData.title) {
       if (onDelete) {
         try {
-          await onDelete(todo.id);
+          await onDelete(id);
 
           return;
         } catch (e) {
@@ -65,18 +66,18 @@ export const TodoItem: React.FC<TodoItemProps> = ({
 
     if (event.key === 'Escape') {
       setIsEditing(false);
-      setTitle(todo.title);
+      setTitle(todoTitle);
     }
   };
 
   return (
-    <div data-cy="Todo" className={`todo ${todo.completed ? 'completed' : ''}`}>
+    <div data-cy="Todo" className={classNames('todo', { 'completed' : completed,})}>
       <label className="todo__status-label">
         <input
           data-cy="TodoStatus"
           type="checkbox"
           className="todo__status"
-          checked={todo.completed}
+          checked={completed}
           onChange={() => onUpdate({ ...todo, title })}
           disabled={loading}
         />
@@ -103,7 +104,7 @@ export const TodoItem: React.FC<TodoItemProps> = ({
           className="todo__title"
           onDoubleClick={handleEdit}
         >
-          {todo.title}
+          {todoTitle}
         </span>
       )}
 
@@ -112,7 +113,7 @@ export const TodoItem: React.FC<TodoItemProps> = ({
           type="button"
           className="todo__remove"
           data-cy="TodoDelete"
-          onClick={() => onDelete(todo.id)}
+          onClick={() => onDelete(id)}
           disabled={loading}
         >
           ×

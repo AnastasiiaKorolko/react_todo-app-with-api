@@ -143,30 +143,6 @@ export const App: React.FC = () => {
     }
   };
 
-  // const handleAllToggleTodo = async () => {
-
-  //   const areAllCompleted = todos.every((todo) => todo.completed);
-  //   const updatedTodo = todos.map((todo) => ({
-  //     ...todo,
-  //     completed: !areAllCompleted,
-  //   }));
-
-  //   const updatePromise = updatedTodo.map((todo) => updateTodo(todo.id, { completed: todo.completed })
-  //   );
-
-  //   const results = await Promise.allSettled(updatePromise);
-
-  //   const successfulUpdates = results.filter((result) => result.status === 'fulfilled');
-
-  //   if (successfulUpdates.length === results.length) {
-  //     setTodos(updatedTodo);
-  //   } else {
-  //     setError("Unable to update some todos");
-  //     setTimeout(() => setError(null), 3000);
-  //   }
-
-  // };
-
   const handleAllToggleTodo = async () => {
     const areAllCompleted = todos.every(todo => todo.completed);
 
